@@ -1,0 +1,2 @@
+# manatal-django-test
+ 
