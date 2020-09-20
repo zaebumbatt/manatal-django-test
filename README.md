@@ -14,6 +14,7 @@
 1. Browse through the api
 
 ## Time spent 
+- Django & Django Rest Framework documentation reading : 1h
 - Setup installation : 1h (issues with previous POSTGRESQL installations) 
 - Part 1 : 30min
 - Part 2 : 30min
