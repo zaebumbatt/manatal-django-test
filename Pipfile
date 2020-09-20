@@ -10,6 +10,7 @@ django = "*"
 djangorestframework = "*"
 psycopg2 = "*"
 drf-nested-routers = "*"
+django-environ = "*"
 
 [requires]
 python_version = "3.8"
