@@ -35,7 +35,9 @@ class SchoolSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    school = serializers.SlugField()
+    school = serializers.SlugRelatedField(
+        queryset=School.objects.all(), slug_field='name'
+    )
 
     class Meta:
         model = Student

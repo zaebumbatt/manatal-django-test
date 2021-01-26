@@ -19,7 +19,7 @@ def restrict_amount(value):
 
 
 class School(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     school_type = models.CharField(choices=SCHOOL_TYPE, max_length=3)
     max_students = models.PositiveIntegerField()
 
