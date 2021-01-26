@@ -13,22 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, include
-from school_backend.models.student import Student, StudentViewSet
-from school_backend.models.school import School, SchoolViewSet
-from rest_framework_nested import routers
-
-
-router = routers.DefaultRouter()
-
-router.register(r'students', StudentViewSet)
-router.register(r'schools', SchoolViewSet)
-
-schools_router = routers.NestedSimpleRouter(router, r'schools', lookup='school')
-schools_router.register(r'students', StudentViewSet)
+from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path('', include(schools_router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api/', include('api.urls')),
+    path('admin/', admin.site.urls),
 ]
