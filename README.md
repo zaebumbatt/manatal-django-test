@@ -36,12 +36,14 @@
    - http://school-api.ml/api/logs/schools/
    
    Logs with api calls initiated by specific user:
-   - http://school-api.ml/api/logs/?username=<username>
-
+   - http://school-api.ml/api/logs/?username= ```username```
+   
+   *Put username after an equal sign.*
+   
    Logs with a specific object mentioned:
-   - http://school-api.ml/api/logs/?obj=<obj>
+   - http://school-api.ml/api/logs/?obj= ```obj```
 
-   Instead of "obj" you can use: first_name, last_name, school_name, school_type.
+   *Instead of "obj" you can use: first_name, last_name, school_name, school_type.*
 
 # Run on you local machine
 1. Clone repository https://github.com/zaebumbatt/manatal-django-test.git
