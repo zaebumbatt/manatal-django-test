@@ -1,1 +1,11 @@
+.git/*
+env/
+venv/
+.venv
+.venv/
 .env
+
+__pycache__/
+
+.idea
+.DS_Store
