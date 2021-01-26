@@ -7,7 +7,8 @@ load_dotenv()
 
 
 client = MongoClient(os.getenv('MC'))
-db = client["logs_mongodb"]
+db = client['logs_mongodb']
 
-col = db["actions"]
-print(os.getenv('MC'))
+users = db['users']
+schools = db['schools']
+students = db['students']
