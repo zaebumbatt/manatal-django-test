@@ -1,4 +1,5 @@
 from .models import Log
+from urllib.parse import urlparse
 
 
 class LoggingMiddleware:
@@ -9,9 +10,9 @@ class LoggingMiddleware:
         'DELETE': 'Destroy'
     }
     models = {
-        'register': 'User',
-        'students': 'Student',
-        'schools': 'School'
+        '/api/register/': 'User',
+        '/api/students/': 'Student',
+        '/api/schools/': 'School'
     }
 
     def __init__(self, get_response):
@@ -25,13 +26,11 @@ class LoggingMiddleware:
         else:
             username = request.user.username
 
-        url = request.get_raw_uri().split('/')[-2]
-        logs = request.get_raw_uri().split('/')[-3]
-        urls = ['register', 'students', 'schools']
+        path = urlparse(request.get_raw_uri()).path
 
-        if url in urls and logs != 'logs':
+        if path in self.models:
             Log.objects.create(
-                model=self.models[url],
+                model=self.models[path],
                 username=username,
                 status_code=response.status_code,
                 action=self.actions[request.method],
