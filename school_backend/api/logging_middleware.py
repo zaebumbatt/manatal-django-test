@@ -1,5 +1,4 @@
-from datetime import datetime
-
+from .models import Log
 from .mongodb_connector import schools, students, users
 
 
@@ -29,7 +28,6 @@ class LoggingMiddleware:
 
         url = request.get_raw_uri().split('/')[-2]
         logs = request.get_raw_uri().split('/')[-3]
-        date_time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         col = None
 
         if url == 'register' and request.method == 'POST':
@@ -40,15 +38,12 @@ class LoggingMiddleware:
             col = schools
 
         if col:
-            col.insert_one(
-                {
-                    date_time: {
-                        'model': self.models[url],
-                        'username': username,
-                        'action': self.actions[request.method],
-                        'status_code': response.status_code,
-                        'data': response.data
-                    }
-                }
-            )
+            Log.objects.create(
+                model=self.models[url],
+                username=username,
+                status_code=response.status_code,
+                action=self.actions[request.method],
+                data=response.data
+                )
+
         return response
