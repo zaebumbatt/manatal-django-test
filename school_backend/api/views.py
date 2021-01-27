@@ -6,30 +6,19 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from .models import School, Student
-from .mongodb_connector import schools, students, users
-from .serializers import SchoolSerializer, StudentSerializer, UserSerializer
-
-
-def check_object_in_record(obj, record):
-    obj = obj.lower()
-    find = False
-    if isinstance(record, list):
-        for data in record:
-            result = [str(entry).lower() for entry in data.values()]
-            if obj in result:
-                find = True
-    else:
-        result = [str(entry).lower() for entry in record.values()]
-        if obj in result:
-            find = True
-    return find
+from .models import Log, School, Student
+from .serializers import (LogsSerializer, SchoolSerializer, StudentSerializer,
+                          UserSerializer)
 
 
 @api_view(['GET'])
 @permission_classes((IsAdminUser,))
 def mongo_logs(request, model=None):
-    models = (users, students, schools)
+    models = {
+        'users': 'User',
+        'students': 'Student',
+        'schools': 'School'
+    }
     username = request.query_params.get('username', None)
     obj = request.query_params.get('obj', None)
 
@@ -37,51 +26,32 @@ def mongo_logs(request, model=None):
         raise ValidationError('Wrong API endpoint')
 
     if username:
-        result = []
-        for col in models:
-            for res in col.find():
-                del res['_id']
-                if list(res.values())[0]['username'] == username:
-                    result.append(res)
-        if not result:
-            raise ValidationError('No data with this username')
-        return Response(result)
+        queryset = Log.objects.filter(username=username)
+        if not queryset:
+            raise ValidationError('Wrong username')
 
     if obj:
+        queryset = Log.objects.all()
         result = []
-        for col in models:
-            for res in col.find():
-                del res['_id']
-                record = list(res.values())[0]['data']
-                if check_object_in_record(obj, record):
-                    result.append(res)
-        if not result:
+        for entry in queryset:
+            if entry.data and obj in entry.data.values():
+                result.append(entry)
+        queryset = result
+        if not queryset:
             raise ValidationError('No data with this object')
-        return Response(result)
 
-    if not model:
-        result = []
-        for col in models:
-            for res in col.find():
-                del res['_id']
-                result.append(res)
-        if not result:
+    elif not model:
+        queryset = Log.objects.all()
+        if not queryset:
             raise ValidationError('Database is empty')
-        return Response(result)
+    else:
+        queryset = Log.objects.filter(model=models[model])
+        if not queryset:
+            raise ValidationError('Model is empty')
 
-    if model == 'users':
-        col = users
-    elif model == 'students':
-        col = students
-    elif model == 'schools':
-        col = schools
+    serializer = LogsSerializer(queryset, many=True)
 
-    result = []
-    for res in col.find():
-        del res['_id']
-        result.append(res)
-
-    return Response(result)
+    return Response(serializer.data)
 
 
 class UserList(generics.CreateAPIView):
