@@ -11,6 +11,19 @@ from .serializers import (LogSerializer, SchoolSerializer, StudentSerializer,
                           UserSerializer)
 
 
+def check_object_in_data(obj, queryset):
+    result = []
+    for entry in queryset:
+        if isinstance(entry.data, list):
+            for elem in entry.data:
+                if obj in elem.values():
+                    result.append(entry)
+        else:
+            if obj in entry.data.values():
+                result.append(entry)
+    return result
+
+
 @api_view(['GET'])
 @permission_classes((IsAdminUser,))
 def mongo_logs(request, model=None):
@@ -31,12 +44,7 @@ def mongo_logs(request, model=None):
             raise ValidationError('Wrong username')
 
     if obj:
-        queryset = Log.objects.all()
-        result = []
-        for entry in queryset:
-            if entry.data and obj in entry.data.values():
-                result.append(entry)
-        queryset = result
+        queryset = check_object_in_data(obj, Log.objects.all())
         if not queryset:
             raise ValidationError('No data with this object')
 
@@ -47,7 +55,7 @@ def mongo_logs(request, model=None):
     else:
         queryset = Log.objects.filter(model=models[model])
         if not queryset:
-            raise ValidationError('Model is empty')
+            raise ValidationError('Table is empty')
 
     serializer = LogSerializer(queryset, many=True)
 
