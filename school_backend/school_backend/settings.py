@@ -85,13 +85,24 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE'),
         'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('POSTGRES_USER'),
+        'USER': os.getenv('POSTGRES_USERNAME'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT')
+    },
+    'remote': {
+        'ENGINE': 'djongo',
+        'NAME': 'mongodb',
+        'CLIENT': {
+            'host': os.getenv('MC'),
+            'username': os.getenv('MC_USERNAME'),
+            'password': os.getenv('MC_PASSWORD'),
+            'authMechanism': 'SCRAM-SHA-1'
+        }
     }
 }
 
+DATABASE_ROUTERS = ['api.routers.LogsRouter']
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
