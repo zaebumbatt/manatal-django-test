@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
-from django.http import JsonResponse
 from rest_framework import generics, mixins
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -23,7 +23,7 @@ def check_object_in_record(obj, record):
         result = [str(entry).lower() for entry in record.values()]
         if obj in result:
             find = True
-    return True if find else False
+    return find
 
 
 @api_view(['GET'])
@@ -34,7 +34,7 @@ def mongo_logs(request, model=None):
     obj = request.query_params.get('obj', None)
 
     if model not in ['users', 'students', 'schools', None]:
-        return Response('Wrong API endpoint')
+        raise ValidationError('Wrong API endpoint')
 
     if username:
         result = []
@@ -44,8 +44,8 @@ def mongo_logs(request, model=None):
                 if list(res.values())[0]['username'] == username:
                     result.append(res)
         if not result:
-            return Response('No data with this username')
-        return JsonResponse(result, safe=False)
+            raise ValidationError('No data with this username')
+        return Response(result)
 
     if obj:
         result = []
@@ -56,8 +56,8 @@ def mongo_logs(request, model=None):
                 if check_object_in_record(obj, record):
                     result.append(res)
         if not result:
-            return Response('No data with this object')
-        return JsonResponse(result, safe=False)
+            raise ValidationError('No data with this object')
+        return Response(result)
 
     if not model:
         result = []
@@ -66,8 +66,8 @@ def mongo_logs(request, model=None):
                 del res['_id']
                 result.append(res)
         if not result:
-            return Response('Database is empty')
-        return JsonResponse(result, safe=False)
+            raise ValidationError('Database is empty')
+        return Response(result)
 
     if model == 'users':
         col = users
@@ -81,7 +81,7 @@ def mongo_logs(request, model=None):
         del res['_id']
         result.append(res)
 
-    return JsonResponse(result, safe=False)
+    return Response(result)
 
 
 class UserList(generics.CreateAPIView):

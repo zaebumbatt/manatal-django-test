@@ -13,8 +13,8 @@ SCHOOL_TYPE = [
 def restrict_amount(value):
     if Student.objects.filter(school=value).count() >= value.max_students:
         raise ValidationError(
-            'School already has maximal amount of students '
-            + str(value.max_students)
+            ('School already has maximal amount of students '
+             + str(value.max_students)), code='invalid'
         )
 
 
