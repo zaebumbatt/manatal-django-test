@@ -44,7 +44,7 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'school')
 
 
-class LogsSerializer(serializers.ModelSerializer):
+class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
         fields = '__all__'

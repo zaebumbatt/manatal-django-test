@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Log, School, Student
-from .serializers import (LogsSerializer, SchoolSerializer, StudentSerializer,
+from .serializers import (LogSerializer, SchoolSerializer, StudentSerializer,
                           UserSerializer)
 
 
@@ -49,7 +49,7 @@ def mongo_logs(request, model=None):
         if not queryset:
             raise ValidationError('Model is empty')
 
-    serializer = LogsSerializer(queryset, many=True)
+    serializer = LogSerializer(queryset, many=True)
 
     return Response(serializer.data)
 
