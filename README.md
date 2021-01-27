@@ -74,5 +74,7 @@
    - ```python manage.py makemigrations```
    
    - ``` python manage.py migrate```
-   
+     
+   - ``` python manage.py migrate --database=remote```
+     
    - ```python manage.py runserver```
