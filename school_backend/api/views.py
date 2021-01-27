@@ -43,7 +43,7 @@ def mongo_logs(request, model=None):
         if not queryset:
             raise ValidationError('Wrong username')
 
-    if obj:
+    elif obj:
         queryset = check_object_in_data(obj, Log.objects.all())
         if not queryset:
             raise ValidationError('No data with this object')
@@ -52,6 +52,7 @@ def mongo_logs(request, model=None):
         queryset = Log.objects.all()
         if not queryset:
             raise ValidationError('Database is empty')
+
     else:
         queryset = Log.objects.filter(model=models[model])
         if not queryset:
