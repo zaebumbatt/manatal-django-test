@@ -1,5 +1,4 @@
 from .models import Log
-from .mongodb_connector import schools, students, users
 
 
 class LoggingMiddleware:
@@ -28,16 +27,9 @@ class LoggingMiddleware:
 
         url = request.get_raw_uri().split('/')[-2]
         logs = request.get_raw_uri().split('/')[-3]
-        col = None
+        urls = ['register', 'students', 'schools']
 
-        if url == 'register' and request.method == 'POST':
-            col = users
-        elif url == 'students' and logs != 'logs':
-            col = students
-        elif url == 'schools' and logs != 'logs':
-            col = schools
-
-        if col:
+        if url in urls and logs != 'logs':
             Log.objects.create(
                 model=self.models[url],
                 username=username,
