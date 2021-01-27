@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .models import School, Student
+from .models import School, Student, Log
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -42,3 +42,9 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('first_name', 'last_name', 'school')
+
+
+class LogsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
+        fields = '__all__'
