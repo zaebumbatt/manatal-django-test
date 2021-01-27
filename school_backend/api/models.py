@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 
+
 SCHOOL_TYPE = [
     ("PRI", 'Primary School'),
     ("SEC", 'Secondary School'),
@@ -35,3 +36,12 @@ class Student(models.Model):
         on_delete=models.CASCADE,
         validators=(restrict_amount,)
     )
+
+
+class Log(models.Model):
+    datetime = models.DateTimeField(auto_now_add=True)
+    model = models.CharField(max_length=20)
+    username = models.CharField(max_length=20)
+    action = models.CharField(max_length=20)
+    status_code = models.PositiveIntegerField()
+    data = models.JSONField()
