@@ -67,7 +67,8 @@
    - DB_PORT=```your postgresql db port```
    - SECRET_KEY=```your django secret_key```
    - MC=```mongodb+srv://...```
-
+   - MC_USERNAME=```your mongodb username```
+   - MC_PASSWORD=```your mongodb password```
 4. Add migrations and runserver:
    
    - ```python manage.py makemigrations```
